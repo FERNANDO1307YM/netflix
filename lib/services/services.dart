@@ -1,0 +1,1 @@
+export 'package:netflix/services/movie_service.dart';
