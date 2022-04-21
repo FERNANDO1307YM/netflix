@@ -1,10 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:netflix/models/models.dart';
 
-class MovieSliderWidget extends StatelessWidget {
+class MovieSliderWidget extends StatefulWidget {
 
   final String title;
+  final List<Movie> movies;
+  final Function onNextPage;
 
-  const MovieSliderWidget({Key? key, required this.title}) : super(key: key);
+  const MovieSliderWidget(
+      {Key? key,
+      required this.title,
+      required this.movies,
+      required this.onNextPage
+      })
+      : super(key: key);
+
+  @override
+  State<MovieSliderWidget> createState() => _MovieSliderWidgetState();
+}
+
+class _MovieSliderWidgetState extends State<MovieSliderWidget> {
+
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      if(_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 500){
+        widget.onNextPage();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,13 +48,14 @@ class MovieSliderWidget extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
-            child: Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+            child: Text(widget.title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
           ),
           Expanded(
             child: ListView.builder(
+              controller: _scrollController,
               scrollDirection: Axis.horizontal,
-              itemCount: 20,
-              itemBuilder: (_, index) => const _MoviePoster(),
+              itemCount: widget.movies.length,
+              itemBuilder: (_, index) => _MoviePoster(movie: widget.movies[index]),
             ),
           )
         ],
@@ -32,7 +65,10 @@ class MovieSliderWidget extends StatelessWidget {
 }
 
 class _MoviePoster extends StatelessWidget {
-  const _MoviePoster({Key? key}) : super(key: key);
+
+  final Movie movie;
+
+  const _MoviePoster({Key? key, required this.movie}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,19 +80,19 @@ class _MoviePoster extends StatelessWidget {
         children: [
           GestureDetector(
             //TODO: Cambiar por objeto
-            onTap: () => Navigator.pushNamed(context, 'detail', arguments: 'objetc'),
+            onTap: () => Navigator.pushNamed(context, 'detail', arguments: movie),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: const FadeInImage(
+              child: FadeInImage(
                 placeholder: NetworkImage('https://via.placeholder.com/300x400'),
-                image: NetworkImage('https://via.placeholder.com/300x400'),
+                image: NetworkImage(movie.fullPosterImg),
                 width: 130,
                 height: 180,
                 fit: BoxFit.cover,
               ),
             ),
           ),
-          const Text('Blanca nieves y los 7 enanitos, una pelicula de Disney',
+          Text(movie.title,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,

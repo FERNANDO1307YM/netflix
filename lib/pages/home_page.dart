@@ -29,10 +29,14 @@ class HomePage extends StatelessWidget {
         child: Column(
           children: [
             CardSwiperWidget(movies: moviesProvider.onDisplayMovies),
-            const MovieSliderWidget(title: 'Tendencias',),
-            const MovieSliderWidget(title: 'Animadas',),
-            const MovieSliderWidget(title: 'Aventura',),
-            const MovieSliderWidget(title: 'Terror',)
+            MovieSliderWidget(title: 'Tendencias',
+              movies: moviesProvider.popularMovies,
+              onNextPage: () {
+                moviesProvider.getPopularMovies();
+              }),
+            // MovieSliderWidget(title: 'Animadas', movies: moviesProvider.popularMovies),
+            // MovieSliderWidget(title: 'Aventura', movies: moviesProvider.popularMovies),
+            // MovieSliderWidget(title: 'Terror', movies: moviesProvider.popularMovies)
           ],
         ),
       )

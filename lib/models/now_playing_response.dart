@@ -63,7 +63,7 @@ class Dates {
 class Movie {
   Movie({
     required this.adult,
-    required this.backdropPath,
+    this.backdropPath,
     required this.genreIds,
     required this.id,
     required this.originalLanguage,
@@ -79,7 +79,7 @@ class Movie {
   });
 
   bool adult;
-  String backdropPath;
+  String? backdropPath;
   List<int> genreIds;
   int id;
   String originalLanguage;
@@ -87,7 +87,7 @@ class Movie {
   String overview;
   double popularity;
   String? posterPath;
-  DateTime releaseDate;
+  String? releaseDate;
   String title;
   bool video;
   double voteAverage;
@@ -114,7 +114,7 @@ class Movie {
     overview: json["overview"],
     popularity: json["popularity"].toDouble(),
     posterPath: json["poster_path"],
-    releaseDate: DateTime.parse(json["release_date"]),
+    releaseDate: json["release_date"],
     title: json["title"],
     video: json["video"],
     voteAverage: json["vote_average"].toDouble(),
@@ -131,7 +131,7 @@ class Movie {
     "overview": overview,
     "popularity": popularity,
     "poster_path": posterPath,
-    "release_date": "${releaseDate.year.toString().padLeft(4, '0')}-${releaseDate.month.toString().padLeft(2, '0')}-${releaseDate.day.toString().padLeft(2, '0')}",
+    "release_date": releaseDate,
     "title": title,
     "video": video,
     "vote_average": voteAverage,
